@@ -1,0 +1,542 @@
+{
+  "name": "directlake",
+  "id": "30eb198c-5e7f-4b91-a9b3-21dbcde20e33",
+  "compatibilityLevel": 1604,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-AU",
+    "tables": [
+      {
+        "name": "calendar",
+        "lineageTag": "22895572-679b-4b9b-ba6b-1fdf38a72215",
+        "sourceLineageTag": "[temp].[calendar]",
+        "dataCategory": "Time",
+        "columns": [
+          {
+            "name": "date",
+            "dataType": "dateTime",
+            "isKey": true,
+            "sourceColumn": "date",
+            "formatString": "General Date",
+            "lineageTag": "1b9d9df1-902b-44c3-a30d-2510eceec1d3",
+            "sourceLineageTag": "date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "formatString": "0",
+            "lineageTag": "26b4754b-368a-46d3-9044-2dc1379f50fd",
+            "sourceLineageTag": "year",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "month",
+            "dataType": "int64",
+            "sourceColumn": "month",
+            "formatString": "0",
+            "lineageTag": "22c5dcc5-4f88-4968-ad60-3123d1fe9ce3",
+            "sourceLineageTag": "month",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "calendar",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "calendar",
+              "expressionSource": "DirectLake - temp",
+              "schemaName": "temp"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Mw_",
+            "expression": "sum(summary[mw])",
+            "formatString": "#,0.00",
+            "lineageTag": "5a44e934-6293-4578-971c-27347024541d",
+            "changedProperties": [
+              {
+                "property": "Name"
+              },
+              {
+                "property": "FormatString"
+              }
+            ]
+          },
+          {
+            "name": "Mwh",
+            "expression": "[Mw_]/12",
+            "formatString": "#,0.00",
+            "lineageTag": "f9b0055b-3950-4637-8d15-480fa312b870",
+            "changedProperties": [
+              {
+                "property": "Name"
+              },
+              {
+                "property": "FormatString"
+              }
+            ]
+          },
+          {
+            "name": "record_count",
+            "expression": "COUNT(summary[date])",
+            "formatString": "0",
+            "lineageTag": "bc98dcc6-f10e-41ab-8c53-26cb7dc7478e",
+            "changedProperties": [
+              {
+                "property": "Name"
+              }
+            ]
+          },
+          {
+            "name": "refresh_time",
+            "expression": "CALCULATE(max(summary[cutoff]),REMOVEFILTERS()) ",
+            "formatString": "General Date",
+            "lineageTag": "d441e0da-92cb-4e50-8c4c-6d699cd2e64d",
+            "changedProperties": [
+              {
+                "property": "Name"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "duid",
+        "lineageTag": "928193a0-e5cb-46fb-8db0-599dc3da0d4a",
+        "sourceLineageTag": "[temp].[duid]",
+        "columns": [
+          {
+            "name": "DUID",
+            "dataType": "string",
+            "sourceColumn": "DUID",
+            "lineageTag": "74767fb2-e6db-4727-b799-5cee8cfb5f04",
+            "sourceLineageTag": "DUID",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region",
+            "lineageTag": "73bee33c-62d1-4c47-b3ff-7c20efc96f3a",
+            "sourceLineageTag": "Region",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "FuelSourceDescriptor",
+            "dataType": "string",
+            "sourceColumn": "FuelSourceDescriptor",
+            "lineageTag": "d660e08e-bdb5-4d42-9212-d7204a85447f",
+            "sourceLineageTag": "FuelSourceDescriptor",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "Participant",
+            "dataType": "string",
+            "sourceColumn": "Participant",
+            "lineageTag": "09f8cc60-9d1f-4f33-bac8-cb90c0a5957d",
+            "sourceLineageTag": "Participant",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "State",
+            "dataType": "string",
+            "sourceColumn": "State",
+            "lineageTag": "d46e38f6-ff87-461f-80ee-49bcbe44bbb3",
+            "sourceLineageTag": "State",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "latitude",
+            "dataType": "double",
+            "sourceColumn": "latitude",
+            "lineageTag": "249ce60c-bffb-414b-99ed-ae75cb317433",
+            "sourceLineageTag": "latitude",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "longitude",
+            "dataType": "double",
+            "sourceColumn": "longitude",
+            "lineageTag": "9f9e3500-8936-4c66-9011-c80e42fdf321",
+            "sourceLineageTag": "longitude",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "duid",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "duid",
+              "expressionSource": "DirectLake - temp",
+              "schemaName": "temp"
+            }
+          }
+        ]
+      },
+      {
+        "name": "summary",
+        "isHidden": true,
+        "lineageTag": "051d8f2e-a3ea-44a5-9378-122b49863823",
+        "sourceLineageTag": "[temp].[summary]",
+        "columns": [
+          {
+            "name": "date",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "date",
+            "formatString": "General Date",
+            "lineageTag": "5e788660-8c9e-44ab-9560-1019eb86a77b",
+            "sourceLineageTag": "date",
+            "summarizeBy": "none",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "time",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "time",
+            "formatString": "0",
+            "lineageTag": "da30710f-0315-40b9-ab23-84f1fdc3fdcf",
+            "sourceLineageTag": "time",
+            "summarizeBy": "none",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "cutoff",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "sourceColumn": "cutoff",
+            "formatString": "General Date",
+            "lineageTag": "7c35caf1-e3ce-4ba3-a175-d6f867630b3d",
+            "sourceLineageTag": "cutoff",
+            "summarizeBy": "none",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "DUID",
+            "dataType": "string",
+            "isHidden": true,
+            "sourceColumn": "DUID",
+            "lineageTag": "710ea073-a276-4e0a-8ec3-51466add13cb",
+            "sourceLineageTag": "DUID",
+            "summarizeBy": "none",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "mw",
+            "dataType": "decimal",
+            "isHidden": true,
+            "sourceColumn": "mw",
+            "formatString": "\\$#,0.###############;-\\$#,0.###############;\\$#,0.###############",
+            "lineageTag": "86e014ce-816a-4116-97f4-3307796b6b9b",
+            "sourceLineageTag": "mw",
+            "summarizeBy": "sum",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-AU\"}"
+              }
+            ]
+          },
+          {
+            "name": "price",
+            "dataType": "decimal",
+            "isHidden": true,
+            "sourceColumn": "price",
+            "formatString": "\\$#,0.###############;-\\$#,0.###############;\\$#,0.###############",
+            "lineageTag": "ca59d79a-8b6a-4ea6-bda8-b976ddf1eaa8",
+            "sourceLineageTag": "price",
+            "summarizeBy": "sum",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"currencyCulture\":\"en-AU\"}"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "summary",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "summary",
+              "expressionSource": "DirectLake - temp",
+              "schemaName": "temp"
+            }
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "IsHidden"
+          }
+        ]
+      },
+      {
+        "name": "mstime",
+        "lineageTag": "2f5c4424-2512-4632-9126-521a72709adf",
+        "sourceLineageTag": "[temp].[mstdatetime]",
+        "columns": [
+          {
+            "name": "time",
+            "dataType": "int64",
+            "sourceColumn": "time",
+            "formatString": "0",
+            "lineageTag": "3c93118d-b454-4e6b-8eae-48c06a918af8",
+            "sourceLineageTag": "time",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "hour",
+            "dataType": "int64",
+            "sourceColumn": "hour",
+            "formatString": "0",
+            "lineageTag": "593038da-e6f2-4362-9247-d084fc7d3b5e",
+            "sourceLineageTag": "hour",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "mstime",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "mstdatetime",
+              "expressionSource": "DirectLake - temp",
+              "schemaName": "temp"
+            }
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "8338f382-9bf1-41a0-d417-6d3338599703",
+        "fromTable": "summary",
+        "fromColumn": "date",
+        "toTable": "calendar",
+        "toColumn": "date",
+        "relyOnReferentialIntegrity": true
+      },
+      {
+        "name": "34ee0120-8830-e128-86dc-f2b3e4c1a2f3",
+        "fromTable": "summary",
+        "fromColumn": "DUID",
+        "toTable": "duid",
+        "toColumn": "DUID",
+        "relyOnReferentialIntegrity": true
+      },
+      {
+        "name": "fdac6d44-1647-6db9-78a3-47b18a8e942e",
+        "fromTable": "summary",
+        "fromColumn": "time",
+        "toTable": "mstime",
+        "toColumn": "time",
+        "relyOnReferentialIntegrity": true
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DirectLake - temp",
+        "kind": "m",
+        "expression": [
+          "let",
+          "    Source = AzureStorage.DataLake(\"https://onelake.dfs.fabric.microsoft.com/f24e70e8-54ec-491b-9175-2c1aef1138ce/c46ab926-8546-45f7-90d3-d941af14c5d5\", [HierarchicalNavigation=true])",
+          "in",
+          "    Source"
+        ],
+        "lineageTag": "d61ee527-9c85-4775-bd9d-deaf487620b5",
+        "annotations": [
+          {
+            "name": "PBI_IncludeFutureArtifacts",
+            "value": "False"
+          },
+          {
+            "name": "PBI_RemovedChildren",
+            "value": "[{\"remoteItemId\":{\"analysisServicesObject\":{\"sourceName\":null,\"sourceLineageTag\":\"[temp].[price_today]\"}},\"objectType\":\"Table\"},{\"remoteItemId\":{\"analysisServicesObject\":{\"sourceName\":null,\"sourceLineageTag\":\"[temp].[scada_today]\"}},\"objectType\":\"Table\"},{\"remoteItemId\":{\"analysisServicesObject\":{\"sourceName\":null,\"sourceLineageTag\":\"[temp].[scada]\"}},\"objectType\":\"Table\"},{\"remoteItemId\":{\"analysisServicesObject\":{\"sourceName\":null,\"sourceLineageTag\":\"[temp].[price]\"}},\"objectType\":\"Table\"}]"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DirectLake - temp\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"RemoteModeling\",\"DirectLakeOnOneLakeCreatedInDesktop\",\"TMDLView_Desktop\",\"WebModelingEdit\"]"
+      },
+      {
+        "name": "TabularEditor_SerializeOptions",
+        "value": "{\"IgnoreInferredObjects\":true,\"IgnoreInferredProperties\":true,\"IgnoreTimestamps\":true,\"SplitMultilineStrings\":true,\"PrefixFilenames\":false,\"LocalTranslations\":false,\"LocalPerspectives\":false,\"SortArrays\":false,\"LocalRelationships\":false,\"Levels\":[\"Data Sources\",\"Shared Expressions\",\"Perspectives\",\"Relationships\",\"Roles\",\"Tables\",\"Tables/Columns\",\"Tables/Hierarchies\",\"Tables/Measures\",\"Tables/Partitions\",\"Tables/Calculation Items\",\"Translations\"]}"
+      },
+      {
+        "name": "__TEdtr",
+        "value": "1"
+      }
+    ]
+  }
+}

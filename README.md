@@ -2,7 +2,7 @@
 
 A ready-to-use solution for ingesting and analyzing Australian electricity market data in Microsoft Fabric.
 
-1. Download the Python Notebook (process_data) from this repo, notice, it is a pure python notebook and does not require spark
+1. Download the Python Notebook (Benchmark.ipynb) ubder Benchmark from this repo, notice, it is a pure python notebook and does not require spark
 2. Import it to Fabric Workspace
 3.  click **Run All**
 

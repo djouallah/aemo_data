@@ -3,14 +3,26 @@ import requests
 from urllib.request import urlopen
 import io
 import zipfile
+import gzip
 import datetime
 import tempfile
-import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Tuple
 import obstore
 from obstore.store import from_url
 import threading
+import os
+import glob
+import logging
+
+# Configure logging
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 
 def is_github_tree_url(url: str) -> bool:
     """Check if URL is a GitHub (directory) URL."""
@@ -86,15 +98,17 @@ def recursively_find_zip_files(api_url: str, base_path: str = "") -> List[Tuple[
     return zip_files
 
 
-def scraping(urls: List[str], folders: List[str], totalfiles: int, ws: str, lh: str, max_workers: int) -> int:
+def scraping(urls: List[str], folders: List[str], totalfiles: int, ws: str, lh: str, max_workers: int, flush_interval: int = 7) -> int:
     """
     Optimized download function using obstore for OneLake operations.
-    Files are extracted directly without gzip compression and written to disk immediately.
 
     Supports:
       - Regular HTML directory listings (original behavior)
       - GitHub tree URLs (e.g., https://github.com/user/repo/tree/branch/path)
       - GitHub tree URLs with glob pattern (e.g., https://github.com/user/repo/tree/branch/path/*)
+
+    Args:
+        flush_interval: Number of files to process before flushing to disk (default: 300)
 
     Returns:
         int: 1 if files were successfully downloaded, 0 if error or no new files
@@ -105,6 +119,55 @@ def scraping(urls: List[str], folders: List[str], totalfiles: int, ws: str, lh: 
     
     # Thread lock for log operations
     log_lock = threading.Lock()
+
+    def flush_batch_to_disk(batch_uploads: List[Tuple[str, bytes]], uploaded_log_entries: List[Tuple[str, str]], log_file_name: str) -> int:
+        """Flush a batch of uploads to disk and update the log."""
+        if not batch_uploads:
+            return 0
+        
+        # Upload files in parallel
+        successful_uploads = []
+        with ThreadPoolExecutor(max_workers=min(8, len(batch_uploads))) as pool:
+            futures = {
+                pool.submit(obstore.put, store, gz_filename, data): (gz_filename, orig_filename)
+                for (gz_filename, data), (orig_filename, _) in zip(batch_uploads, uploaded_log_entries)
+            }
+            for future in as_completed(futures):
+                gz_filename, orig_filename = futures[future]
+                try:
+                    future.result()
+                    successful_uploads.append((orig_filename, gz_filename))
+                except Exception as e:
+                    print(f"Error uploading {gz_filename}: {e}")
+
+        # Update log with successful uploads
+        if successful_uploads:
+            with log_lock:
+                try:
+                    # Read current log state
+                    existing_lines = []
+                    try:
+                        existing_log_result = obstore.get(store, log_file_name)
+                        existing_log_bytes = existing_log_result.bytes()
+                        existing_log = bytes(existing_log_bytes).decode("utf-8").strip()
+                        if existing_log:
+                            lines = existing_log.splitlines()
+                            if len(lines) > 1:  # Skip header
+                                existing_lines = lines[1:]
+                    except:
+                        pass
+
+                    # Add new entries
+                    new_lines = [f"{zipf},{gzf}" for zipf, gzf in successful_uploads]
+                    all_log_lines = existing_lines + new_lines
+                    log_content = "zip_filename,extracted_filepath\n" + "\n".join(all_log_lines)
+                    obstore.put(store, log_file_name, log_content.encode("utf-8"))
+                    print(f"Flushed {len(successful_uploads)} files to disk and updated log {log_file_name}")
+
+                except Exception as e:
+                    print(f"Error updating log file {log_file_name}: {e}")
+        
+        return len(successful_uploads)
 
     def process_url(url_folder_pair: Tuple[str, str]) -> Tuple[str, int]:
         url, folder = url_folder_pair
@@ -194,11 +257,12 @@ def scraping(urls: List[str], folders: List[str], totalfiles: int, ws: str, lh: 
         if not new_files:
             return f"{url} - 0 files extracted (all {len(all_files)} files already downloaded)", 0
 
+        # Batch processing variables
+        batch_uploads = []
         uploaded_log_entries = []
+        total_uploaded = 0
 
         def process_file(filename: str):
-            """Process a single zip file: download, extract to temp disk, upload each file immediately."""
-            temp_zip_path = None
             try:
                 # Determine download URL
                 if is_github_tree_url(url):
@@ -206,104 +270,55 @@ def scraping(urls: List[str], folders: List[str], totalfiles: int, ws: str, lh: 
                 else:
                     download_url = url + filename
 
-                # Download to temporary file to avoid holding entire zip in memory
-                with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as temp_zip:
-                    temp_zip_path = temp_zip.name
-                    with requests.get(download_url, stream=True, timeout=30) as resp:
-                        if not resp.ok:
-                            print(f"Failed to download {filename}: HTTP {resp.status_code}")
-                            return None
-                        # Stream download in chunks
-                        for chunk in resp.iter_content(chunk_size=8192):
-                            if chunk:
-                                temp_zip.write(chunk)
-
-                # Extract and upload each file individually
-                results = []
-                partition_folder = clean_folder + extract_week_partition(filename) + "/"
-                
-                with zipfile.ZipFile(temp_zip_path, "r") as zf:
-                    for zip_info in zf.infolist():
-                        if zip_info.is_dir():
-                            continue
-                        
-                        # Extract to temporary file
-                        with tempfile.NamedTemporaryFile(delete=False) as temp_extracted:
-                            temp_extracted_path = temp_extracted.name
-                            try:
-                                # Extract directly to temp file
-                                with zf.open(zip_info) as source:
-                                    chunk_size = 8192
-                                    while True:
-                                        chunk = source.read(chunk_size)
-                                        if not chunk:
-                                            break
-                                        temp_extracted.write(chunk)
-                                
-                                # Upload directly from temp file
-                                extracted_filename = partition_folder + zip_info.filename
-                                with open(temp_extracted_path, 'rb') as upload_file:
-                                    obstore.put(store, extracted_filename, upload_file.read())
-                                
-                                results.append((filename, extracted_filename))
-                                
-                            finally:
-                                # Clean up temp extracted file immediately
-                                try:
-                                    os.unlink(temp_extracted_path)
-                                except:
-                                    pass
-                
-                return results
-                
+                with requests.get(download_url, stream=True, timeout=30) as resp:
+                    if not resp.ok:
+                        print(f"Failed to download {filename}: HTTP {resp.status_code}")
+                        return None
+                    zip_bytes = io.BytesIO(resp.content)
+                    with zipfile.ZipFile(zip_bytes, "r") as zf:
+                        results = []
+                        for zip_info in zf.infolist():
+                            if zip_info.is_dir():
+                                continue
+                            with zf.open(zip_info) as extracted:
+                                gzip_buffer = io.BytesIO()
+                                with gzip.GzipFile(filename=zip_info.filename, mode="wb", fileobj=gzip_buffer) as gz:
+                                    gz.write(extracted.read())
+                                gz_name = zip_info.filename + ".gz"
+                                partition_folder = clean_folder + extract_week_partition(filename) + "/"
+                                gz_filename = partition_folder + gz_name
+                                results.append((filename, gz_filename, gzip_buffer.getvalue()))
+                        return results
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
                 return None
-            finally:
-                # Clean up temp zip file
-                if temp_zip_path and os.path.exists(temp_zip_path):
-                    try:
-                        os.unlink(temp_zip_path)
-                    except:
-                        pass
 
-        # Step 3: Process files with parallelism controlled by max_workers
-        successful_uploads = []
-        with ThreadPoolExecutor(max_workers=min(max_workers, len(new_files))) as pool:
+        # Step 3: Process files with periodic flushing
+        with ThreadPoolExecutor(max_workers=min(8, len(new_files))) as pool:
             futures = [pool.submit(process_file, fn) for fn in new_files]
             for f in as_completed(futures):
                 res = f.result()
                 if res:
-                    successful_uploads.extend(res)
+                    for zipf, gzf, data in res:
+                        uploaded_log_entries.append((zipf, gzf))
+                        batch_uploads.append((gzf, data))
+                        
+                        # Flush when batch reaches flush_interval
+                        if len(batch_uploads) >= flush_interval:
+                            flushed_count = flush_batch_to_disk(batch_uploads, uploaded_log_entries, log_file_name)
+                            total_uploaded += flushed_count
+                            batch_uploads = []
+                            uploaded_log_entries = []
 
-        # Step 4: Update log with successful uploads
-        if successful_uploads:
-            with log_lock:
-                try:
-                    # Read current log state again (in case it was updated by another thread)
-                    existing_lines = []
-                    try:
-                        existing_log_result = obstore.get(store, log_file_name)
-                        existing_log_bytes = existing_log_result.bytes()
-                        existing_log = bytes(existing_log_bytes).decode("utf-8").strip()
-                        if existing_log:
-                            lines = existing_log.splitlines()
-                            if len(lines) > 1:  # Skip header
-                                existing_lines = lines[1:]
-                    except:
-                        pass
+        # Step 4: Flush any remaining files
+        if batch_uploads:
+            flushed_count = flush_batch_to_disk(batch_uploads, uploaded_log_entries, log_file_name)
+            total_uploaded += flushed_count
 
-                    # Add new entries
-                    new_lines = [f"{zipf},{extracted_path}" for zipf, extracted_path in successful_uploads]
-                    all_log_lines = existing_lines + new_lines
-                    log_content = "zip_filename,extracted_filepath\n" + "\n".join(all_log_lines)
-                    obstore.put(store, log_file_name, log_content.encode("utf-8"))
-                    print(f"Updated log {log_file_name} with {len(successful_uploads)} new entries")
+        if total_uploaded == 0:
+            return f"{url} - No files to upload", 0
 
-                except Exception as e:
-                    print(f"Error updating log file {log_file_name}: {e}")
-
-        return f"{url} - {len(successful_uploads)} files extracted and uploaded", len(successful_uploads)
+        return f"{url} - {total_uploaded} files extracted and uploaded", total_uploaded
 
     # Process URLs concurrently
     with ThreadPoolExecutor(max_workers=max_workers) as executor:

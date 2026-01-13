@@ -1,5 +1,5 @@
 WITH
-  duid_aemo AS (
+  duid_aemo AS MATERIALIZED (
     SELECT
       DUID AS DUID,
       first(Region) AS Region,
@@ -20,17 +20,17 @@ WITH
     UNION ALL SELECT 'SA1', 'South Australia'
     UNION ALL SELECT 'VIC1', 'Victoria'
   ),
-  x AS (
+  x AS MATERIALIZED (
     SELECT
       'WA1' AS Region,
       "Facility Code" AS DUID,
       "Participant Name" AS Participant
-    FROM read_csv_auto('https://data.wa.aemo.com.au/datafiles/post-facilities/facilities.csv')
+    FROM read_csv('https://data.wa.aemo.com.au/datafiles/post-facilities/facilities.csv')
   ),
-  tt AS (
+  tt AS MATERIALIZED (
     SELECT
       *
-    FROM read_csv_auto('https://github.com/djouallah/aemo_fabric/raw/main/WA_ENERGY.csv', header = 1)
+    FROM read_csv('https://raw.githubusercontent.com/djouallah/fabric_demo/refs/heads/main/data/duid/WA_ENERGY.csv')
   ),
   duid_wa AS (
     SELECT
@@ -50,9 +50,9 @@ WITH
       *
     FROM duid_wa
   ),
-geo as(
+geo as MATERIALIZED (
   select duid, max(latitude) as latitude,max(longitude) as longitude from
-  read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vR_I3U-f2DtY4ex8QXV_S1T19JYy58__nz52Ra6Mm10r3_vJik5OrvQecN-pFWfjUbIE6m0wMl_R6kL/pub?gid=0&single=true&output=csv')
+  read_csv('https://raw.githubusercontent.com/djouallah/fabric_demo/refs/heads/main/data/duid/geo.csv')
 
   where latitude is not null
 group by all)

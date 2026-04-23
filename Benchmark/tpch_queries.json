@@ -1,0 +1,205 @@
+{
+  "version": "1.1.0",
+  "events": [
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.000Z",
+      "id": "q01",
+      "metrics": {
+        "visualTitle": "Q01 - fact scan Revenue",
+        "QueryText": "EVALUATE ROW(\"Revenue\", [Revenue])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.001Z",
+      "id": "q02",
+      "metrics": {
+        "visualTitle": "Q02 - fact scan Charge",
+        "QueryText": "EVALUATE ROW(\"Charge\", [Charge])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.002Z",
+      "id": "q03",
+      "metrics": {
+        "visualTitle": "Q03 - multi-measure by returnflag/linestatus",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_returnflag], lineitem[l_linestatus], \"Revenue\", [Revenue], \"Qty\", [Qty], \"Charge\", [Charge], \"AvgPrice\", [Avg Price], \"AvgDisc\", [Avg Disc])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.003Z",
+      "id": "q04",
+      "metrics": {
+        "visualTitle": "Q04 - multi-measure by shipmode",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_shipmode], \"Revenue\", [Revenue], \"Qty\", [Qty], \"OrderCount\", [Order Count])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.004Z",
+      "id": "q05",
+      "metrics": {
+        "visualTitle": "Q05 - join group by o_orderpriority",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(orders[o_orderpriority], \"Revenue\", [Revenue], \"OrderCount\", [Order Count])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.005Z",
+      "id": "q06",
+      "metrics": {
+        "visualTitle": "Q06 - join group by o_orderstatus",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(orders[o_orderstatus], \"Revenue\", [Revenue], \"Charge\", [Charge])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.006Z",
+      "id": "q07",
+      "metrics": {
+        "visualTitle": "Q07 - 3-table chain by c_mktsegment",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(customer[c_mktsegment], \"Revenue\", [Revenue], \"CustomerCount\", [Customer Count])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.007Z",
+      "id": "q08",
+      "metrics": {
+        "visualTitle": "Q08 - high-card group by o_custkey, 1995 Q1",
+        "QueryText": "EVALUATE TOPN(500, SUMMARIZECOLUMNS(orders[o_custkey], FILTER(ALL(orders[o_orderdate]), orders[o_orderdate] >= DATE(1995,1,1) && orders[o_orderdate] < DATE(1995,4,1)), \"Revenue\", [Revenue]), [Revenue], DESC)"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.008Z",
+      "id": "q09",
+      "metrics": {
+        "visualTitle": "Q09 - very high-card group by o_orderkey, 1994-06",
+        "QueryText": "EVALUATE TOPN(1000, SUMMARIZECOLUMNS(orders[o_orderkey], FILTER(ALL(orders[o_orderdate]), orders[o_orderdate] >= DATE(1994,6,1) && orders[o_orderdate] < DATE(1994,7,1)), \"Revenue\", [Revenue], \"Charge\", [Charge]), [Revenue], DESC)"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.009Z",
+      "id": "q10",
+      "metrics": {
+        "visualTitle": "Q10 - TOPN 10 customers by Revenue",
+        "QueryText": "EVALUATE TOPN(10, SUMMARIZECOLUMNS(customer[c_custkey], customer[c_name], \"Revenue\", [Revenue]), [Revenue], DESC) ORDER BY [Revenue] DESC"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.010Z",
+      "id": "q11",
+      "metrics": {
+        "visualTitle": "Q11 - TOPN 100 orders by Charge",
+        "QueryText": "EVALUATE TOPN(100, SUMMARIZECOLUMNS(orders[o_orderkey], orders[o_orderdate], \"Charge\", [Charge]), [Charge], DESC) ORDER BY [Charge] DESC"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.011Z",
+      "id": "q12",
+      "metrics": {
+        "visualTitle": "Q12 - DISTINCTCOUNT year=1995",
+        "QueryText": "EVALUATE ROW(\"DistinctCust\", CALCULATE([Customer Count], FILTER(ALL(orders[o_orderdate]), YEAR(orders[o_orderdate]) = 1995)), \"DistinctOrd\", CALCULATE([Order Count], FILTER(ALL(lineitem[l_shipdate]), YEAR(lineitem[l_shipdate]) = 1995)))"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.012Z",
+      "id": "q13",
+      "metrics": {
+        "visualTitle": "Q13 - DISTINCTCOUNT year=1996",
+        "QueryText": "EVALUATE ROW(\"DistinctCust\", CALCULATE([Customer Count], FILTER(ALL(orders[o_orderdate]), YEAR(orders[o_orderdate]) = 1996)), \"DistinctOrd\", CALCULATE([Order Count], FILTER(ALL(lineitem[l_shipdate]), YEAR(lineitem[l_shipdate]) = 1996)))"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.013Z",
+      "id": "q14",
+      "metrics": {
+        "visualTitle": "Q14 - selectivity sweep year 1995",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_shipmode], FILTER(ALL(lineitem[l_shipdate]), YEAR(lineitem[l_shipdate]) = 1995), \"Revenue\", [Revenue])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.014Z",
+      "id": "q15",
+      "metrics": {
+        "visualTitle": "Q15 - selectivity sweep month 1995-03",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_shipmode], FILTER(ALL(lineitem[l_shipdate]), lineitem[l_shipdate] >= DATE(1995,3,1) && lineitem[l_shipdate] < DATE(1995,4,1)), \"Revenue\", [Revenue])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.015Z",
+      "id": "q16",
+      "metrics": {
+        "visualTitle": "Q16 - selectivity sweep single day 1995-03-15",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_shipmode], FILTER(ALL(lineitem[l_shipdate]), lineitem[l_shipdate] = DATE(1995,3,15)), \"Revenue\", [Revenue])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.016Z",
+      "id": "q17",
+      "metrics": {
+        "visualTitle": "Q17 - CONTAINSSTRING on l_comment",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_returnflag], FILTER(lineitem, CONTAINSSTRING(lineitem[l_comment], \"special\")), \"Revenue\", [Revenue])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.017Z",
+      "id": "q18",
+      "metrics": {
+        "visualTitle": "Q18 - 3-table filter c_mktsegment=BUILDING",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(orders[o_orderpriority], FILTER(ALL(customer[c_mktsegment]), customer[c_mktsegment] = \"BUILDING\"), \"Revenue\", [Revenue], \"OrderCount\", [Order Count])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.018Z",
+      "id": "q19",
+      "metrics": {
+        "visualTitle": "Q19 - customer acctbal summary by c_mktsegment",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(customer[c_mktsegment], \"AvgAcctbal\", AVERAGE(customer[c_acctbal]), \"Revenue\", [Revenue], \"CustomerCount\", [Customer Count])"
+      }
+    },
+    {
+      "name": "Execute DAX Query",
+      "component": "AS",
+      "start": "2026-04-23T00:00:00.019Z",
+      "id": "q20",
+      "metrics": {
+        "visualTitle": "Q20 - CALCULATE over 1994 date range",
+        "QueryText": "EVALUATE SUMMARIZECOLUMNS(lineitem[l_returnflag], \"RevenueRange\", CALCULATE([Revenue], FILTER(ALL(lineitem[l_shipdate]), lineitem[l_shipdate] >= DATE(1994,1,1) && lineitem[l_shipdate] <= DATE(1994,12,31))))"
+      }
+    }
+  ]
+}

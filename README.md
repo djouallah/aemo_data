@@ -8,18 +8,16 @@ This repo contains **only data** — daily zip files from AEMO, automatically do
 `data/archive/<year>/` — daily zip files from [AEMO Daily Reports](https://nemweb.com.au/Reports/Current/Daily_Reports/), organized by year.  
 Coverage: Queensland, New South Wales, Victoria, South Australia, Tasmania.
 
-## Transformation repos (dbt + duckrun)
+## Transformation repos
 
 If you want to transform this data into Delta / Iceberg / DWH tables on Microsoft Fabric, see:
 
-| Repo | Storage format |
-|------|---------------|
-| [dbt_fabric_python_delta](https://github.com/djouallah/dbt_fabric_python_delta) | Delta Lake |
-| [dbt_fabric_python_iceberg](https://github.com/djouallah/dbt_fabric_python_iceberg) | Apache Iceberg |
-| [dbt_fabric_python_dwh](https://github.com/djouallah/dbt_fabric_python_dwh) | Fabric Warehouse |
-| [dbt_fabric_python_ducklake](https://github.com/djouallah/dbt_fabric_python_ducklake) | DuckLake |
-
-All four repos use [duckrun](https://github.com/djouallah/duckrun) as the dbt adapter.
+| Repo | Storage format | Tool |
+|------|---------------|------|
+| [dbt_fabric_python_delta](https://github.com/djouallah/dbt_fabric_python_delta) | Delta Lake | [duckrun](https://github.com/djouallah/duckrun) |
+| [dbt_fabric_python_iceberg](https://github.com/djouallah/dbt_fabric_python_iceberg) | Apache Iceberg | [duckrun](https://github.com/djouallah/duckrun) |
+| [dbt_fabric_python_dwh](https://github.com/djouallah/dbt_fabric_python_dwh) | Delta Lake (Fabric DWH) | Fabric DWH adapter |
+| [dbt_fabric_python_ducklake](https://github.com/djouallah/dbt_fabric_python_ducklake) | DuckLake | dbt-duckdb |
 
 ## CI
 

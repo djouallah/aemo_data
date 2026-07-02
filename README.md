@@ -15,7 +15,7 @@ If you want to transform this data into Delta / Iceberg / DWH tables on Microsof
 | Repo | Storage format | Tool |
 |------|---------------|------|
 | [dbt_fabric_python_delta](https://github.com/djouallah/dbt_fabric_python_delta) | Delta Lake | [duckrun](https://github.com/djouallah/duckrun) |
-| [dbt_fabric_python_iceberg](https://github.com/djouallah/dbt_fabric_python_iceberg) | Apache Iceberg | [duckrun](https://github.com/djouallah/duckrun) |
+| [dbt_fabric_python_iceberg](https://github.com/djouallah/dbt_fabric_python_iceberg) | Apache Iceberg | dbt-duckdb |
 | [dbt_fabric_python_dwh](https://github.com/djouallah/dbt_fabric_python_dwh) | Delta Lake (Fabric DWH) | Fabric DWH adapter |
 | [dbt_fabric_python_ducklake](https://github.com/djouallah/dbt_fabric_python_ducklake) | DuckLake | dbt-duckdb |
 

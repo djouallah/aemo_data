@@ -67,10 +67,14 @@ jobs:
             r.raise_for_status()
             data = r.content
 
-            # Guard against AEMO returning an HTML error page instead of the workbook
-            if len(data) < 100_000 or not data[:8].startswith(b"\xd0\xcf\x11\xe0"):
+            # Guard against AEMO returning an HTML error page instead of the workbook.
+            # Accept either an OLE2 .xls (\xd0\xcf\x11\xe0) or a modern zip-based
+            # .xlsx (PK\x03\x04) -- AEMO serves the latter at the .xls URL.
+            is_ole2 = data[:8].startswith(b"\xd0\xcf\x11\xe0")
+            is_zip = data[:4] == b"PK\x03\x04"
+            if len(data) < 100_000 or not (is_ole2 or is_zip):
                 raise SystemExit(
-                    f"Downloaded content does not look like an .xls workbook "
+                    f"Downloaded content does not look like an Excel workbook "
                     f"({len(data)} bytes, magic={data[:8]!r})"
                 )
             print(f"Downloaded {len(data)} bytes")

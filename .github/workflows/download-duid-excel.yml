@@ -1,0 +1,115 @@
+name: Download DUID Registration Excel
+
+on:
+  schedule:
+    # Run weekly on Monday at 7 AM Brisbane time (21:00 UTC)
+    - cron: '0 21 * * 1'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  download-duid-excel:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Minimal checkout (skip existing files)
+      run: |
+        git clone --depth=1 --filter=blob:none --sparse https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} .
+        git sparse-checkout init --cone
+        git sparse-checkout set .github/ data/duid/registration/
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Create download script
+      run: |
+        cat > download_excel.py << 'EOF'
+        import os
+        import glob
+        import hashlib
+        import requests
+        from datetime import datetime, timezone
+
+        URL = ("https://www.aemo.com.au/-/media/Files/Electricity/NEM/"
+               "Participant_Information/NEM-Registration-and-Exemption-List.xls")
+        HEADERS = {
+            'User-Agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) '
+                           'AppleWebKit/537.36 (KHTML, like Gecko) '
+                           'Chrome/81.0.4044.138 Safari/537.36')
+        }
+        DEST_DIR = "data/duid/registration"
+
+
+        def sha(b):
+            return hashlib.sha256(b).hexdigest()
+
+
+        def main():
+            print(f"Downloading: {URL}")
+            r = requests.Session().get(URL, headers=HEADERS, timeout=120)
+            r.raise_for_status()
+            data = r.content
+
+            # Guard against AEMO returning an HTML error page instead of the workbook
+            if len(data) < 100_000 or not data[:8].startswith(b"\xd0\xcf\x11\xe0"):
+                raise SystemExit(
+                    f"Downloaded content does not look like an .xls workbook "
+                    f"({len(data)} bytes, magic={data[:8]!r})"
+                )
+            print(f"Downloaded {len(data)} bytes")
+
+            os.makedirs(DEST_DIR, exist_ok=True)
+            existing = sorted(
+                glob.glob(f"{DEST_DIR}/NEM-Registration-and-Exemption-List_*.xls")
+            )
+            latest_hash = None
+            if existing:
+                with open(existing[-1], "rb") as f:
+                    latest_hash = sha(f.read())
+                print(f"Most recent archived copy: {existing[-1]}")
+
+            changed = sha(data) != latest_hash
+            if changed:
+                stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
+                out = f"{DEST_DIR}/NEM-Registration-and-Exemption-List_{stamp}.xls"
+                with open(out, "wb") as f:
+                    f.write(data)
+                print(f"New version detected -> saved {out}")
+            else:
+                print("No change since the most recent archived copy.")
+
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                f.write(f"changed={'true' if changed else 'false'}\n")
+
+
+        if __name__ == "__main__":
+            main()
+        EOF
+
+    - name: Run download script
+      id: dl
+      run: python download_excel.py
+
+    - name: Commit and push if changes
+      if: steps.dl.outputs.changed == 'true'
+      run: |
+        # Add new file with sparse option to avoid expanding checkout
+        git add --sparse data/duid/registration/
+        git commit -m "Auto-update: new AEMO NEM Registration and Exemption List - $(date +'%Y-%m-%d %H:%M:%S UTC')"
+        git push
+
+    - name: Summary
+      run: |
+        if [ "${{ steps.dl.outputs.changed }}" == "true" ]; then
+          echo "✅ New AEMO registration Excel archived and committed"
+        else
+          echo "ℹ️ No change since the last archived Excel"
+        fi

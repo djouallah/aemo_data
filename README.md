@@ -1,4 +1,4 @@
-# fabric_demo — Australian Electricity Market Data Archive
+# Australian Electricity Market Data Archive
 
 A raw data archive for the Australian electricity market (AEMO / NEM).  
 This repo contains **only data** — daily zip files from AEMO, automatically downloaded by the CI workflow every day at 7 AM Brisbane time (21:00 UTC). No transformations, no semantic models, no notebooks.
@@ -10,7 +10,7 @@ Coverage: Queensland, New South Wales, Victoria, South Australia, Tasmania.
 
 ## Transformation repos
 
-If you want to transform this data into Delta / Iceberg / DWH tables on Microsoft Fabric, see:
+If you want to transform this data into Delta / Iceberg / DWH tables using SQL:
 
 | Repo | Storage format | Tool |
 |------|---------------|------|

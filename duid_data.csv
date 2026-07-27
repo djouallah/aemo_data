@@ -349,7 +349,7 @@ Origin Energy Electricity Limited,Quarantine Power Station,SA1,Generating Unit,M
 Origin Energy Electricity Limited,Quarantine Power Station,SA1,Generating Unit,Market,Scheduled,Fossil,Natural Gas,Combustion,Open Cycle Gas turbines (OCGT),3,Y,QPS3,24,29.5,6,,,,,
 Origin Energy Electricity Limited,Quarantine Power Station,SA1,Generating Unit,Market,Scheduled,Fossil,Natural Gas,Combustion,Open Cycle Gas turbines (OCGT),4,Y,QPS4,24,25,5,,,,,
 Origin Energy Electricity Limited,Quarantine Power Station,SA1,Generating Unit,Market,Scheduled,Fossil,Natural Gas,Combustion,Open Cycle Gas turbines (OCGT),5,Y,QPS5,128,128,26,,,,,
-Origin Energy Electricity Limited,Eraring Battery Energy Storage System,NSW1,Bidirectional Unit,Market,Scheduled,Battery storage,Grid,Storage,Battery,140,Y,ERB01 ,614.6,460,184,614.6,460,184,1073,
+Origin Energy Electricity Limited,Eraring Battery Energy Storage System,NSW1,Bidirectional Unit,Market,Scheduled,Battery storage,Grid,Storage,Battery,140,Y,ERB01,614.6,460,184,614.6,460,184,1073,
 Berrybank 2 Asset Pty Ltd as trustee for Berrybank 2 Asset Trust,Queanbeyan BESS,NSW1,Generating Unit,Market,Scheduled,Battery storage,Grid,Storage,Battery and Inverter, 1-8,Y,QBYNBG1,10,10,8,,,,,
 Berrybank 2 Asset Pty Ltd as trustee for Berrybank 2 Asset Trust,Queanbeyan BESS,NSW1,Load,Market,Scheduled,Battery storage,Grid,Storage,Battery and Inverter, 1-8,Y,QBYNBL1,10,10,8,,,,,
 Mackay Sugar Limited,Racecourse Mill Power Station,QLD1,Generating Unit,Non-Market,Non-Scheduled,Renewable/ Biomass / Waste,Bagasse,Combustion,Steam Sub-Critical,1-Mar,N,RACOMIL1,48,48,0,,,,,

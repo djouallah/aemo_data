@@ -248,7 +248,6 @@ Snowy Hydro Limited,Laverton North Power Station,VIC1,Generating Unit,Market,Sch
 Hydro-Electric Corporation,Lemonthyme / Wilmot Power Station,TAS1,Generating Unit,Market,Scheduled,Hydro,Water,Renewable,Hydro - Gravity,1-Feb,Y,LEM_WIL,81.6,86,25,,,,,
 Ergon Energy Queensland Pty Ltd ,Lilyvale Solar Farm,QLD1,Generating Unit,Market,Semi-Scheduled,Solar,Solar,Renewable,Photovoltaic Tracking Flat panel,Jan-74,Y,LILYSF1,118,100,20,,,,,
 Limondale Sun Farm Pty Ltd,Limondale Solar Farm 1,NSW1,Generating Unit,Market,Semi-Scheduled,Solar,Solar,Renewable,Photovoltaic Tracking Flat Panel,1-100,Y,LIMOSF11,275,220,44,,,,,
-Limondale Sun Farm Pty Ltd,Limondale Solar Farm 1,NSW1,Load,Market,Scheduled,-,-,-,-,1,Y,LIMOSF11,20,20,0,,,,,
 Limondale Sun Farm Pty Ltd,Limondale Solar Farm 2,NSW1,Generating Unit,Market,Semi-Scheduled,Solar,Solar,Renewable,Photovoltaic Tracking Flat Panel,Jan-14,Y,LIMOSF21,38,29,6,,,,,
 Lincoln Gap Wind Farm (Operations) Pty Ltd,Lincoln Gap Wind Farm,SA1,Generating Unit,Market,Semi-Scheduled,Wind,Wind,Renewable,Wind - Onshore,Jan-35,Y,LGAPWF1,126,123,25,,,,,
 Lincoln Gap Wind Farm (Operations) Pty Ltd,Lincoln Gap Wind Farm,SA1,Generating Unit,Market,Semi-Scheduled,Wind,Wind,Renewable,Wind - Onshore,36-59,Y,LGAPWF2,86,85,17,,,,,

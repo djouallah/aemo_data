@@ -12,12 +12,7 @@ Coverage: Queensland, New South Wales, Victoria, South Australia, Tasmania.
 
 If you want to transform this data into Delta / Iceberg / DWH tables using SQL:
 
-| Repo | Storage format | Tool |
-|------|---------------|------|
-| [dbt_fabric_python_delta](https://github.com/djouallah/dbt_fabric_python_delta) | Delta Lake | [duckrun](https://github.com/djouallah/duckrun) |
-| [dbt_fabric_python_iceberg](https://github.com/djouallah/dbt_fabric_python_iceberg) | Apache Iceberg | dbt-duckdb |
-| [dbt_fabric_python_dwh](https://github.com/djouallah/dbt_fabric_python_dwh) | Delta Lake (Fabric DWH) | Fabric DWH adapter |
-| [dbt_fabric_python_ducklake](https://github.com/djouallah/dbt_fabric_python_ducklake) | DuckLake | dbt-duckdb |
+[https://github.com/djouallah/aemo_data](https://github.com/djouallah/dbt-fabric)
 
 ## CI
 

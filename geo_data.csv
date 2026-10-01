@@ -1,6 +1,6 @@
 StationName,Region,FuelSourceDescriptor,DUID,Technology,latitude,longitude,Tech,RegMW,id,TEST,LENGHT,geo,checkgeo
-Adelaide Desalination Plant,SA1,Battery,ADPBA1L,Renewable,,,Storage,,1,1,27, ,93
-"Adelaide Desalination Plant, Battery Unit",SA1,Battery,ADPBA1G,Renewable,,,Storage,,2,1,41, ,93
+Adelaide Desalination Plant,SA1,Battery,ADPBA1L,Renewable,-35.0969,138.484,Storage,,1,1,27,-35.0969 138.484,93
+"Adelaide Desalination Plant, Battery Unit",SA1,Battery,ADPBA1G,Renewable,-35.0969,138.484,Storage,,2,1,41,-35.0969 138.484,93
 Agl Kemps Creek,NSW1,Landfill Methane / Landfill Gas,AGLSITA1,Gas,,,Gas,1,3,1,15, ,93
 Angaston Power Station,SA1,Diesel,ANGAST1,Fuel,-34.50394829,139.0242963,Fuel,50,4,1,22,-34.50394829 139.0242963,1
 Appin Power Plant,NSW1,Waste Coal Mine Gas,APPIN,Coal,-34.210868,150.792711,Coal,55.6,5,1,17,-34.210868 150.792711,1
@@ -52,9 +52,9 @@ Broken Hill Solar Plant,NSW1,Solar,BROKENH1,Renewable,-31.988905,141.391547,Sola
 Brooklyn LFG U1-3,VIC1,Landfill Methane / Landfill Gas,BROOKLYN,Gas,-37.819005,144.831257,Gas,2.83,51,1,17,-37.819005 144.831257,93
 Brown Mountain Hydro Power Station,NSW1,Water,BROWNMT,Renewable,-36.594993,149.473997,Hydro,5,52,1,34,-36.594993 149.473997,1
 Browns Plains Landfill Gas PS,QLD1,Landfill Methane / Landfill Gas,BPLANDF1,Gas,-27.672038,153.066312,Gas,2,53,1,29,-27.672038 153.066312,93
-Bulgana Green Power Hub - Battery Units,VIC1,Battery,BULBESL1,Renewable,,,Storage,,54,1,39, ,93
+Bulgana Green Power Hub - Battery Units,VIC1,Battery,BULBESL1,Renewable,-37.038,142.983,Storage,,54,1,39,-37.038 142.983,93
 Bulgana GreenPowerHub WF,VIC1,Wind,BULGANA1,Renewable,-37.038034,142.983474,Wind,,55,1,24,-37.038034 142.983474,0
-Bulgana Green Power Hub - Battery Units,VIC1,Battery,BULBESG1,Renewable,,,Storage,,56,1,39,,
+Bulgana Green Power Hub - Battery Units,VIC1,Battery,BULBESG1,Renewable,-37.038,142.983,Storage,,56,1,39,-37.038 142.983,
 Bungala One Solar Farm,SA1,Solar,BNGSF1,Renewable,-32.423316,137.841798,Solar,135,57,1,22,-32.423316 137.841798,1
 Bungala Two Solar Farm,SA1,Solar,BNGSF2,Renewable,-32.406993,137.840933,Solar,135,58,1,22,-32.406993 137.840933,1
 Burrendong Hydro Power Station,NSW1,Water,BDONGHYD,Renewable,-32.664624,149.107959,Hydro,19,59,1,30,-32.664624 149.107959,93
@@ -453,9 +453,9 @@ Yendon Wind Farm,VIC1,Wind,YENDWF1,Renewable,-37.630952,144.022463,Wind,144.4,45
 Suntop Solar Farm,NSW1,Solar,SUNTPSF1,Renewable,-32.583514,148.826931,Solar,175,452,1,17,-32.583514 148.826931,93
 Wagga North Solar Farm,NSW1,Solar,WAGGNSF1,Renewable,-35.070575,147.438807,Solar,55,453,1,22,-35.070575 147.438807,93
 Morgan-Whyalla Pipeline Pumping Station,SA1,Solar,MWPS2PV1,Renewable,-33.968667,139.429079,Solar,,454,1,39,-33.968667 139.429079,93
-Victorian Big Battery,VIC1,Storage/Pumps,VBBG1,Renewable,,,Storage,360,455,1,21, ,93
-Victorian Big Battery,VIC1,Storage/Pumps,VBBL1,Renewable,,,Storage,360,456,1,21, ,93
-Wandoan Battery Energy Storage,QLD1,Storage/Pumps,WANDBG1,Renewable,,,Storage,123,457,1,30, ,93
+Victorian Big Battery,VIC1,Storage/Pumps,VBBG1,Renewable,-38.0383,144.29,Storage,360,455,1,21,-38.0383 144.29,93
+Victorian Big Battery,VIC1,Storage/Pumps,VBBL1,Renewable,-38.0383,144.29,Storage,360,456,1,21,-38.0383 144.29,93
+Wandoan Battery Energy Storage,QLD1,Storage/Pumps,WANDBG1,Renewable,-26.2615,149.766,Storage,123,457,1,30,-26.2615 149.766,93
 Adelaide Desalination Plant,SA1,Solar,ADPPV1,Renewable,-35.096948,138.484061,Solar,,458,1,27,-35.096948 138.484061,93
 Morgan-Whyalla Pipeline Pumping Station,SA1,Solar,MWPS1PV1,Renewable,-34.018246,139.679293,Solar,,459,1,39,-34.018246 139.679293,93
 Adelaide Desalination Plant,SA1,Grid,ADPBA1,,-35.096948,138.484061,,7.76,460,,,-35.096948 138.484061,
